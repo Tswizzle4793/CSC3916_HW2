@@ -27,7 +27,8 @@ function getJSONObjectForMovieRequirement(req) {
     var json = {
         headers: "No headers",
         key: process.env.UNIQUE_KEY,
-        body: "No body"
+        body: "No body",
+        message:"No message"
     };
 
     if (req.body != null) {
@@ -72,17 +73,18 @@ router.post('/signin', function (req, res) {
     }
 });
 
-router.route('/testcollection')
+router.route('/movies')
     .delete(authController.isAuthenticated, function(req, res) {
         console.log(req.body);
         res = res.status(200);
+
         if (req.get('Content-Type')) {
             res = res.type(req.get('Content-Type'));
         }
         var o = getJSONObjectForMovieRequirement(req);
+        o.message = "movie deleted";
         res.json(o);
-    }
-    )
+    })
     .put(authJwtController.isAuthenticated, function(req, res) {
         console.log(req.body);
         res = res.status(200);
@@ -90,8 +92,29 @@ router.route('/testcollection')
             res = res.type(req.get('Content-Type'));
         }
         var o = getJSONObjectForMovieRequirement(req);
+        o.message = "movie updated";
         res.json(o);
-    }
+    })
+
+    .get(function(req, res) {
+        res = res.status(200);
+        if (req.get('Content-Type')) {
+            res = res.type(req.get('Content-Type'));
+        }
+        var o = getJSONObjectForMovieRequirement(req);
+        o.message = "GET movies";
+        res.json(o);
+        })
+    .post(function(req, res){
+        res = res.status(200);
+        if (req.get('Content-Type')) {
+            res = res.type(req.get('Content-Type'));
+        }
+        var o = getJSONObjectForMovieRequirement(req);
+        o.message = "movie saved";
+        res.json(o);
+        }
+
     );
 
 app.use('/', router);
